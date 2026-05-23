@@ -7,6 +7,7 @@ import 'data/datasources/local/movie_local_datasource.dart';
 import 'data/datasources/remote/movie_remote_datasource.dart';
 import 'data/models/movie_model.dart';
 import 'data/repositories/movie_repository_impl.dart';
+import 'domain/repositories/movie_repository.dart';
 import 'domain/usecases/get_favorites.dart';
 import 'domain/usecases/get_trending.dart';
 import 'domain/usecases/search_movies.dart';
@@ -36,33 +37,39 @@ class MyApp extends StatelessWidget {
       localDatasource: localDatasource,
     );
 
-    return MultiBlocProvider(
+    return MultiRepositoryProvider(
       providers: [
-        BlocProvider(
-          create: (_) => MovieBloc(
-            getTrending: GetTrending(repository),
-          ),
-        ),
-        BlocProvider(
-          create: (_) => SearchBloc(
-            searchMovies: SearchMovies(repository),
-          ),
-        ),
-        BlocProvider(
-          create: (_) => FavoriteBloc(
-            getFavorites: GetFavorites(repository),
-            toggleFavorite: ToggleFavorite(repository),
-          ),
-        ),
+        RepositoryProvider<MovieRepository>(create: (_) => repository),
       ],
-      child: MaterialApp.router(
-        title: 'CineApp',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => MovieBloc(
+              getTrending: GetTrending(repository),
+            ),
+          ),
+          BlocProvider(
+            create: (_) => SearchBloc(
+              searchMovies: SearchMovies(repository),
+              repository: repository,
+            ),
+          ),
+          BlocProvider(
+            create: (_) => FavoriteBloc(
+              getFavorites: GetFavorites(repository),
+              toggleFavorite: ToggleFavorite(repository),
+            ),
+          ),
+        ],
+        child: MaterialApp.router(
+          title: 'CineApp',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          routerConfig: appRouter,
         ),
-        routerConfig: appRouter,
       ),
     );
   }

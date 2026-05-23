@@ -20,8 +20,14 @@ class MovieRepositoryImpl implements MovieRepository {
   }
 
   @override
-  Future<List<Movie>> searchMovies(String query) async {
-    final movies = await remoteDatasource.searchMovies(query);
+  Future<List<Movie>> searchMovies(String query, {int? genreId}) async {
+    final movies = await remoteDatasource.searchMovies(query, genreId: genreId);
+    return movies.map((e) => e.toEntity()).toList();
+  }
+
+  @override
+  Future<List<Movie>> discoverByGenre(int genreId) async {
+    final movies = await remoteDatasource.discoverByGenre(genreId);
     return movies.map((e) => e.toEntity()).toList();
   }
 
@@ -50,5 +56,22 @@ class MovieRepositoryImpl implements MovieRepository {
   @override
   Future<bool> isFavorite(int movieId) async {
     return localDatasource.isFavorite(movieId);
+  }
+
+  @override
+  Future<Map<int, String>> getGenres() async {
+    final genres = await remoteDatasource.getGenres();
+    return {for (var g in genres) g.id: g.name};
+  }
+
+  @override
+  Future<String?> getTrailerUrl(int movieId) async {
+    final videos = await remoteDatasource.getMovieVideos(movieId);
+    final trailer = videos.firstWhere(
+      (v) => v['type'] == 'Trailer' && v['site'] == 'YouTube',
+      orElse: () => {},
+    );
+    if (trailer.isEmpty) return null;
+    return 'https://www.youtube.com/watch?v=${trailer['key']}';
   }
 }

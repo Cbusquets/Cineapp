@@ -56,10 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: GridView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.7,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
+                      crossAxisCount: 3,
+                      childAspectRatio: 0.65,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
                     ),
                     itemCount: state.movies.length,
                     itemBuilder: (context, index) {

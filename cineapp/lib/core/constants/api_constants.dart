@@ -7,5 +7,8 @@ class ApiConstants {
 
   static String get trending => '/trending/movie/week';
   static String get search => '/search/movie';
+  static String get genres => '/genre/movie/list';
+  static String get discover => '/discover/movie';
   static String movieDetail(int id) => '/movie/$id';
+  static String movieVideos(int id) => '/movie/$id/videos';
 }

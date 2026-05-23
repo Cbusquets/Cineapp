@@ -17,6 +17,12 @@ class _SearchScreenState extends State<SearchScreen> {
   final _controller = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    context.read<SearchBloc>().add(LoadGenresEvent());
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -34,7 +40,11 @@ class _SearchScreenState extends State<SearchScreen> {
             border: InputBorder.none,
           ),
           onChanged: (query) {
-            context.read<SearchBloc>().add(SearchMoviesEvent(query));
+            final state = context.read<SearchBloc>().state;
+            int? genreId;
+            if (state is SearchLoaded) genreId = state.selectedGenreId;
+            if (state is SearchEmpty) genreId = state.selectedGenreId;
+            context.read<SearchBloc>().add(SearchMoviesEvent(query, genreId: genreId));
           },
         ),
         actions: [
@@ -49,56 +59,53 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: BlocBuilder<SearchBloc, SearchState>(
         builder: (context, state) {
-          if (state is SearchInitial) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.search, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text('Buscá una película', style: TextStyle(color: Colors.grey)),
-                ],
-              ),
-            );
-          }
-          if (state is SearchLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is SearchEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.movie_filter, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text('No se encontraron resultados', style: TextStyle(color: Colors.grey)),
-                ],
-              ),
-            );
-          }
-          if (state is SearchError) {
-            return Center(child: Text(state.message));
-          }
-          if (state is SearchLoaded) {
-            return GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.7,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemCount: state.movies.length,
-              itemBuilder: (context, index) {
-                final movie = state.movies[index];
-                return MovieCard(
-                  movie: movie,
-                  onTap: () => context.push('/detail/${movie.id}', extra: movie),
-                );
-              },
-            );
-          }
-          return const SizedBox();
+          final genres = state.genres;
+          int? selectedGenreId;
+          if (state is SearchLoaded) selectedGenreId = state.selectedGenreId;
+          if (state is SearchEmpty) selectedGenreId = state.selectedGenreId;
+
+          return Column(
+            children: [
+              if (genres.isNotEmpty)
+                SizedBox(
+                  height: 48,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: FilterChip(
+                          label: const Text('Todos'),
+                          selected: selectedGenreId == null,
+                          onSelected: (_) {
+                            context.read<SearchBloc>().add(
+                                  SearchMoviesEvent(_controller.text),
+                                );
+                          },
+                        ),
+                      ),
+                      ...genres.entries.map((e) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: FilterChip(
+                              label: Text(e.value),
+                              selected: selectedGenreId == e.key,
+                              onSelected: (_) {
+                                context.read<SearchBloc>().add(
+                                      SearchMoviesEvent(
+                                        _controller.text,
+                                        genreId: e.key,
+                                      ),
+                                    );
+                              },
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+              Expanded(child: _buildBody(state)),
+            ],
+          );
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -114,5 +121,62 @@ class _SearchScreenState extends State<SearchScreen> {
         },
       ),
     );
+  }
+
+  Widget _buildBody(SearchState state) {
+    if (state is SearchInitial) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'Buscá una película o elegí un género',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+    }
+    if (state is SearchLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state is SearchEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.movie_filter, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text('No se encontraron resultados',
+                style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
+    }
+    if (state is SearchError) {
+      return Center(child: Text(state.message));
+    }
+    if (state is SearchLoaded) {
+      return GridView.builder(
+        padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 0.65,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+        ),
+        itemCount: state.movies.length,
+        itemBuilder: (context, index) {
+          final movie = state.movies[index];
+          return MovieCard(
+            movie: movie,
+            onTap: () => context.push('/detail/${movie.id}', extra: movie),
+          );
+        },
+      );
+    }
+    return const SizedBox();
   }
 }

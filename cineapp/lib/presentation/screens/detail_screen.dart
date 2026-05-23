@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/api_constants.dart';
 import '../../domain/entities/movie.dart';
+import '../../domain/repositories/movie_repository.dart';
 import '../blocs/favorite/favorite_bloc.dart';
 import '../blocs/favorite/favorite_event.dart';
 import '../blocs/favorite/favorite_state.dart';
@@ -17,10 +19,35 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  String? _trailerUrl;
+  bool _loadingTrailer = true;
+
   @override
   void initState() {
     super.initState();
     context.read<FavoriteBloc>().add(GetFavoritesEvent());
+    _loadTrailer();
+  }
+
+  Future<void> _loadTrailer() async {
+    try {
+      final repo = context.read<MovieRepository>();
+      final url = await repo.getTrailerUrl(widget.movie.id);
+      setState(() {
+        _trailerUrl = url;
+        _loadingTrailer = false;
+      });
+    } catch (e) {
+      setState(() => _loadingTrailer = false);
+    }
+  }
+
+  Future<void> _openTrailer() async {
+    if (_trailerUrl == null) return;
+    final uri = Uri.parse(_trailerUrl!);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   @override
@@ -82,6 +109,23 @@ class _DetailScreenState extends State<DetailScreen> {
                     style: const TextStyle(fontSize: 15, height: 1.5),
                   ),
                   const SizedBox(height: 24),
+                  if (_loadingTrailer)
+                    const Center(child: CircularProgressIndicator())
+                  else if (_trailerUrl != null)
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: _openTrailer,
+                        icon: const Icon(Icons.play_circle_outline),
+                        label: const Text('Ver trailer'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 12),
                   BlocBuilder<FavoriteBloc, FavoriteState>(
                     builder: (context, state) {
                       bool isFav = false;

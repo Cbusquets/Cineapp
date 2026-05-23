@@ -201,7 +201,7 @@ El APK se genera en `build/app/outputs/flutter-apk/app-release.apk`
 ## 🧪 Tests
 
 ```bash
-flutter test
+flutter test --reporter expanded
 ```
 
 ---

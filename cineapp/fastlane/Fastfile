@@ -1,0 +1,37 @@
+default_platform(:android)
+
+platform :android do
+
+  desc "Correr los tests"
+  lane :test do
+    gradle(
+      task: "test",
+      project_dir: "android/"
+    )
+  end
+
+  desc "Compilar APK de debug"
+  lane :build_debug do
+    gradle(
+      task: "assemble",
+      build_type: "Debug",
+      project_dir: "android/"
+    )
+  end
+
+  desc "Compilar APK de release"
+  lane :build_release do
+    gradle(
+      task: "assemble",
+      build_type: "Release",
+      project_dir: "android/"
+    )
+  end
+
+  desc "Correr tests y compilar APK"
+  lane :ci do
+    test
+    build_debug
+  end
+
+end

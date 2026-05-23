@@ -1,0 +1,100 @@
+Materia: Desarrollo de Aplicaciones Móviles
+Herramienta utilizada: Claude (Anthropic)
+Fecha: Mayo 2026
+================================================================
+
+PROMPTS UTILIZADOS DURANTE EL DESARROLLO
+----------------------------------------------------------------
+
+1. DISEÑO Y ARQUITECTURA
+----------------------------------------------------------------
+
+P: ¿Qué patrón de arquitectura es recomendable para una app Flutter que consume una API REST y tiene persistencia local?
+
+P: ¿Para qué sirve cada capa en una arquitectura BLoC? ¿Qué va en domain, data y presentation?
+
+P: ¿Cuál es la estructura de carpetas recomendada para un proyecto Flutter con patrón BLoC?
+
+P: ¿Para qué usamos las carpetas core, data, domain y presentation en Flutter?
+
+P: ¿Cuál es la diferencia entre un repositorio abstracto y su implementación concreta en arquitectura limpia?
+
+----------------------------------------------------------------
+2. BASE DE DATOS Y PERSISTENCIA
+----------------------------------------------------------------
+
+P: ¿Cómo funciona Hive en Flutter?
+
+P: ¿Qué hace LocalDatasource con Hive?
+
+P: ¿Qué guarda SharedPreferences y en qué se diferencia de Hive?
+
+P: ¿Por qué usar Hive y no SQLite para guardar favoritos en Flutter?
+
+----------------------------------------------------------------
+3. CONSUMO DE API
+----------------------------------------------------------------
+
+P: ¿Cómo se configura Dio para consumir una API REST en Flutter?
+
+P: ¿Cómo se manejan los query parameters en Dio para buscar películas con filtros?
+
+P: ¿Cuál es la diferencia entre el endpoint /search/movie y /discover/movie en la TMDB API?
+
+P: ¿Cómo se obtienen los trailers de una película con la TMDB API?
+
+P: ¿Cómo se protege una API Key en Flutter para que no se suba a GitHub?
+
+----------------------------------------------------------------
+4. NAVEGACIÓN Y UI
+----------------------------------------------------------------
+
+P: ¿Cómo funciona GoRouter en Flutter para navegar entre pantallas pasando parámetros?
+
+P: ¿Cómo se implementan los FilterChip en Flutter para filtrar por categoría?
+
+P: ¿Cómo se abre una URL externa desde Flutter usando url_launcher?
+
+P: ¿Cómo se implementa un SliverAppBar con imagen de fondo en Flutter?
+
+----------------------------------------------------------------
+5. BLOC Y ESTADO
+----------------------------------------------------------------
+
+P: ¿Qué es un evento y un estado en el patrón BLoC?
+
+P: ¿Para qué sirve Equatable en los estados y eventos de BLoC?
+
+P: ¿Cómo se comunican dos BLoCs diferentes en Flutter?
+
+P: ¿Cómo se usa MultiBlocProvider para proveer múltiples BLoCs en la app?
+
+----------------------------------------------------------------
+6. COMPONENTES ANDROID
+----------------------------------------------------------------
+
+P: ¿Qué componentes Android son obligatorios en una app Flutter y cómo se implementan?
+
+P: ¿Qué es un Service en Android y para qué se usa en el contexto de una app de películas?
+
+P: ¿Qué es un BroadcastReceiver y cómo detecta cambios de conectividad en Android?
+
+P: ¿Qué es un ContentProvider y cómo expone datos a otras aplicaciones Android?
+
+P: ¿Qué son los Intents explícitos e implícitos en Android?
+
+P: ¿Qué permisos hay que declarar en el AndroidManifest.xml para acceder a internet y detectar la red?
+
+----------------------------------------------------------------
+7. SEGURIDAD Y CALIDAD
+----------------------------------------------------------------
+
+P: ¿Qué es Fastlane y para qué se usa en el desarrollo móvil?
+
+P: ¿Qué es CI/CD y cómo se aplica en un proyecto Flutter?
+
+P: ¿Qué es un análisis SAST y qué herramientas se usan en proyectos Android/Flutter?
+
+P: ¿Qué es Dependency Check y para qué sirve en un proyecto móvil?
+
+

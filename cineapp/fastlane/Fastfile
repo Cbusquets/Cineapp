@@ -2,12 +2,9 @@ default_platform(:android)
 
 platform :android do
 
-  desc "Correr los tests"
+  desc "Correr los tests con Flutter"
   lane :test do
-    gradle(
-      task: "test",
-      project_dir: "android/"
-    )
+    sh("cd .. && flutter test --reporter expanded")
   end
 
   desc "Compilar APK de debug"
@@ -28,8 +25,8 @@ platform :android do
     )
   end
 
-  desc "Correr tests y compilar APK"
-  lane :ci do
+  desc "Correr tests y compilar APK debug"
+  lane :build do
     test
     build_debug
   end

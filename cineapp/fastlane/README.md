@@ -21,7 +21,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane android test
 ```
 
-Correr los tests
+Correr los tests con Flutter
 
 ### android build_debug
 
@@ -39,13 +39,13 @@ Compilar APK de debug
 
 Compilar APK de release
 
-### android ci
+### android build
 
 ```sh
-[bundle exec] fastlane android ci
+[bundle exec] fastlane android build
 ```
 
-Correr tests y compilar APK
+Correr tests y compilar APK debug
 
 ----
 

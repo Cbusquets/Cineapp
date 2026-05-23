@@ -5,12 +5,27 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.0017044">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.0014374">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: assembleDebug" time="266.9925816">
+      <testcase classname="fastlane.lanes" name="1: Switch to android test lane" time="0.0011685">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: cd .. &amp;&amp; flutter test --reporter expanded" time="4.0872419">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: Switch to android build_debug lane" time="0.0020862">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: assembleDebug" time="15.1609553">
         
       </testcase>
     
